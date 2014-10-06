@@ -11,10 +11,26 @@
 		}
 	}
 
+	function requestDepartmentMarkers(onSuccess) {
+		$.get('/api/department-marker').success(onSuccess).error(console.error);
+	}
+
 	function initMap(lat, lng) {
 		var map = new google.maps.Map(document.getElementById('map'), {
-			zoom: 14,
+			zoom: 6,
 			center: new google.maps.LatLng(lat, lng)
+		});
+
+		requestDepartmentMarkers(function(res) {
+			var markersData = res._embedded.department_marker;
+
+			markersData.forEach(function(markerData) {
+				var marker = new google.maps.Marker({
+					title: markerData.title,
+					position: new google.maps.LatLng(markerData.latitude, markerData.longitude),
+					map: map
+				});
+			});
 		});
 	}
 

@@ -1,16 +1,37 @@
 <?php
-/**
- * Global Configuration Override
- *
- * You can use this file for overriding configuration values from modules, etc.
- * You would place values in here that are agnostic to the environment and not
- * sensitive to security.
- *
- * @NOTE: In practice, this file will typically be INCLUDED in your source
- * control, so do not include passwords or other sensitive information in this
- * file.
- */
-
-return array(
-    // ...
-);
+return [
+    'db' => [
+        'adapters' => [
+            'db.adapter.my-tennis-pal' => [
+                'driver' => 'Pdo',
+                'dsn' => 'mysql:dbname=my_tennis_pal;host=127.0.0.1',
+                'username' => 'root',
+                'password' => '',
+            ],
+            'db.adapter.localities' => [
+                'driver' => 'Pdo',
+                'dsn' => 'mysql:dbname=localities;host=127.0.0.1',
+                'username' => 'root',
+                'password' => '',
+            ]
+        ]
+    ],
+    'service_manager' => [
+//        'factories' => [
+//            'Zend\\Db\\Adapter\\Adapter' => 'Zend\\Db\\Adapter\\AdapterServiceFactory',
+//        ],
+        'abstract_factories' => [
+            'Zend\Db\Adapter\AdapterAbstractServiceFactory',
+        ]
+    ],
+    'zf-mvc-auth' => [
+        'authentication' => [
+            'http' => [
+                'accept_schemes' => [
+                    0 => 'basic',
+                ],
+                'realm' => 'api',
+            ],
+        ],
+    ],
+];
