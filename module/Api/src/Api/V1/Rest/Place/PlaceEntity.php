@@ -1,12 +1,12 @@
 <?php
-namespace Api\V1\Rest\TennisPlace;
+namespace Api\V1\Rest\Place;
 use Zend\Stdlib\ArraySerializableInterface;
 
 /**
- * Class TennisPlaceEntity
- * @package Api\V1\Rest\TennisPlace
+ * Class PlaceEntity
+ * @package Api\V1\Rest\Place
  */
-class TennisPlaceEntity implements ArraySerializableInterface
+class PlaceEntity implements ArraySerializableInterface
 {
     protected $id;
 

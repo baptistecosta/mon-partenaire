@@ -1,16 +1,17 @@
 <?php
-namespace Api\V1\Rest\TennisPlace;
+namespace Api\V1\Rest\Place;
 
+use ZF\ApiProblem\ApiProblem;
 use ZF\Rest\AbstractResourceListener;
 
 /**
- * Class TennisPlaceResource
- * @package Api\V1\Rest\TennisPlace
+ * Class PlaceResource
+ * @package Api\V1\Rest\Place
  */
-class TennisPlaceResource extends AbstractResourceListener
+class PlaceResource extends AbstractResourceListener
 {
     /**
-     * @var TennisPlaceMapper
+     * @var PlaceMapper
      */
     protected $mapper;
 
@@ -42,5 +43,17 @@ class TennisPlaceResource extends AbstractResourceListener
     public function fetchAll($params = [])
     {
         return $this->mapper->fetchAll();
+    }
+
+    /**
+     * Create a resource
+     *
+     * @param  mixed $data
+     * @return ApiProblem|mixed
+     */
+    public function create($data)
+    {
+        $tennisPlaceId = $this->mapper->create((array)$data);
+        return $this->mapper->fetchOne($tennisPlaceId);
     }
 }

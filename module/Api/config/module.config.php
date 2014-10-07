@@ -20,12 +20,21 @@ return [
                     ],
                 ],
             ],
-            'api.rest.tennis-place' => [
+            'api.rest.place' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/api/tennis-place[/:tennis_place_id]',
+                    'route' => '/api/place[/:place_id]',
                     'defaults' => [
-                        'controller' => 'Api\\V1\\Rest\\TennisPlace\\Controller',
+                        'controller' => 'Api\\V1\\Rest\\Place\\Controller',
+                    ],
+                ],
+            ],
+            'api.rest.place-type' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/place-type[/:place_type_id]',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\PlaceType\\Controller',
                     ],
                 ],
             ],
@@ -38,10 +47,10 @@ return [
             'route_identifier_name' => 'department_id',
             'collection_name' => 'department',
             'entity_http_methods' => [
-                0 => 'GET'
+                0 => 'GET',
             ],
             'collection_http_methods' => [
-                0 => 'GET'
+                0 => 'GET',
             ],
             'collection_query_whitelist' => [
                 //
@@ -72,25 +81,53 @@ return [
             'collection_class' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerCollection',
             'service_name' => 'DepartmentMarker',
         ],
-        'Api\\V1\\Rest\\TennisPlace\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\TennisPlace\\TennisPlaceResource',
-            'route_name' => 'api.rest.tennis-place',
-            'route_identifier_name' => 'tennis_place_id',
-            'collection_name' => 'tennis_place',
+        'Api\\V1\\Rest\\Place\\Controller' => [
+            'listener' => 'Api\\V1\\Rest\\Place\\PlaceResource',
+            'route_name' => 'api.rest.place',
+            'route_identifier_name' => 'place_id',
+            'collection_name' => 'place',
             'entity_http_methods' => [
-                0 => 'GET'
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
             ],
             'collection_http_methods' => [
-                0 => 'GET'
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [
+                //
+            ],
+            'page_size' => 20,
+            'page_size_param' => null,
+            'entity_class' => 'Api\\V1\\Rest\\Place\\PlaceEntity',
+            'collection_class' => 'Api\\V1\\Rest\\Place\\PlaceCollection',
+            'service_name' => 'Place',
+        ],
+        'Api\\V1\\Rest\\PlaceType\\Controller' => [
+            'listener' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResource',
+            'route_name' => 'api.rest.place-type',
+            'route_identifier_name' => 'place_type_id',
+            'collection_name' => 'place_type',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'PATCH',
+                2 => 'PUT',
+                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
             ],
             'collection_query_whitelist' => [
                 //
             ],
             'page_size' => 10,
             'page_size_param' => null,
-            'entity_class' => 'Api\\V1\\Rest\\TennisPlace\\TennisPlaceEntity',
-            'collection_class' => 'Api\\V1\\Rest\\TennisPlace\\TennisPlaceCollection',
-            'service_name' => 'TennisPlace',
+            'entity_class' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeEntity',
+            'collection_class' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeCollection',
+            'service_name' => 'PlaceType',
         ],
     ],
     'zf-versioning' => [
@@ -110,7 +147,8 @@ return [
         'controllers' => [
             'Api\\V1\\Rest\\Department\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\DepartmentMarker\\Controller' => 'HalJson',
-            'Api\\V1\\Rest\\TennisPlace\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\Place\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\PlaceType\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rest\\Department\\Controller' => [
@@ -119,6 +157,16 @@ return [
                 2 => 'application/json',
             ],
             'Api\\V1\\Rest\\DepartmentMarker\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\Place\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\PlaceType\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/hal+json',
                 2 => 'application/json',
@@ -133,7 +181,11 @@ return [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
-            'Api\\V1\\Rest\\TennisPlace\\Controller' => [
+            'Api\\V1\\Rest\\Place\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\PlaceType\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -165,10 +217,16 @@ return [
                 'route_identifier_name' => 'department_id',
                 'is_collection' => true,
             ],
-            'Api\\V1\\Rest\\TennisPlace\\TennisPlaceEntity' => [
+            'Api\\V1\\Rest\\Place\\PlaceEntity' => [
                 'entity_identifier_name' => 'id',
-                'route_name' => 'api.rest.tennis-place',
-                'route_identifier_name' => 'tennis_place_id',
+                'route_name' => 'api.rest.place',
+                'route_identifier_name' => 'place_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ],
+            'Api\\V1\\Rest\\PlaceType\\PlaceTypeEntity' => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.place-type',
+                'route_identifier_name' => 'place_type_id',
                 'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
             ],
         ],
