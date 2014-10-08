@@ -1,6 +1,10 @@
+html, body, .content {
+    min-height: 100% !important;
+    height: 100%;
+}
+
 body {
-    padding-top: 60px;
-    padding-bottom: 40px;
+    padding-top: 50px;
 }
 
 .zf-green {
@@ -34,4 +38,13 @@ div.container a.brand {
     background: url("../img/zf2-logo.png") no-repeat scroll 0 10px transparent;
     margin-left: 0;
     padding: 8px 20px 12px 40px;
+}
+
+.container {
+    width: 100%;
+}
+
+.map-canvas {
+    width: 40%;
+    height: 100%;
 }
