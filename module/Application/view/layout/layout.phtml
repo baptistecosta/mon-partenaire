@@ -1,6 +1,6 @@
 <?php echo $this->doctype(); ?>
 
-<html lang="en">
+<html lang="fr" ng-app="myTennisPal">
     <head>
         <meta charset="utf-8">
         <?php echo $this->headTitle('ZF2 '. $this->translate('Skeleton Application'))->setSeparator(' - ')->setAutoEscape(false) ?>
@@ -17,13 +17,17 @@
                         ->prependStylesheet($this->basePath() . '/css/bootstrap.min.css') ?>
 
         <!-- Scripts -->
-        <?php echo $this->headScript()
-            ->prependFile($this->basePath() . '/js/bootstrap.min.js')
-            ->prependFile($this->basePath() . '/js/jquery.min.js')
-            ->prependFile($this->basePath() . '/js/respond.min.js', 'text/javascript', array('conditional' => 'lt IE 9',))
-            ->prependFile($this->basePath() . '/js/html5shiv.js',   'text/javascript', array('conditional' => 'lt IE 9',))
-        ; ?>
+        <script type="application/javascript" src="/js/vendor/angular.min.js"></script>
+        <script type="application/javascript" src="/js/vendor/angular-route.min.js"></script>
+        <script type="application/javascript" src="/js/vendor/jquery.min.js"></script>
+        <script type="application/javascript" src="/js/vendor/bootstrap.min.js"></script>
+        <script type="application/javascript" src="https://maps.googleapis.com/maps/api/js?v=3.17"></script>
 
+        <!--[if lt IE 9]><script type="text/javascript" src="/js/vendor/html5shiv.js"></script><![endif]-->
+        <!--[if lt IE 9]><script type="text/javascript" src="/js/vendor/respond.min.js"></script><![endif]-->
+
+        <script type="text/javascript" src="/js/src/ng/app.js"></script>
+        <script type="text/javascript" src="/js/src/ng/controller/index.js"></script>
     </head>
     <body>
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

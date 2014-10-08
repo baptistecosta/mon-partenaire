@@ -7,13 +7,19 @@ return [
                 'dsn' => 'mysql:dbname=my_tennis_pal;host=127.0.0.1',
                 'username' => 'root',
                 'password' => '',
+                'driver_options' => [
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8"
+                ],
             ],
             'db.adapter.localities' => [
                 'driver' => 'Pdo',
                 'dsn' => 'mysql:dbname=localities;host=127.0.0.1',
                 'username' => 'root',
                 'password' => '',
-            ]
+                'driver_options' => [
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8"
+                ],
+            ],
         ]
     ],
     'service_manager' => [

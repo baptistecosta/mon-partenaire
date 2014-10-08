@@ -1,6 +1,7 @@
 html, body, .content, .full-size {
     min-height: 100% !important;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
