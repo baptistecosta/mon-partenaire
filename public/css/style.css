@@ -1,4 +1,4 @@
-html, body, .content {
+html, body, .content, .full-size {
     min-height: 100% !important;
     height: 100%;
 }
