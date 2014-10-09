@@ -38,6 +38,15 @@ return [
                     ],
                 ],
             ],
+            'api.rest.place-marker' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/place-marker',
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rest\\PlaceMarker\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-rest' => [
@@ -129,6 +138,31 @@ return [
             'collection_class' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeCollection',
             'service_name' => 'PlaceType',
         ],
+        'Api\\V1\\Rest\\PlaceMarker\\Controller' => [
+            'listener' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResource',
+            'route_name' => 'api.rest.place-marker',
+            'route_identifier_name' => 'place_marker_id',
+            'collection_name' => 'place_marker',
+            'entity_http_methods' => [
+                0 => 'GET',
+//                1 => 'PATCH',
+//                2 => 'PUT',
+//                3 => 'DELETE',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+//                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [
+                'north-east-bound',
+                'south-west-bound',
+            ],
+            'page_size' => 10,
+            'page_size_param' => null,
+            'entity_class' => 'Api\\V1\\Rest\\Marker\\MarkerEntity',
+//            'collection_class' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerCollection',
+            'service_name' => 'PlaceMarker',
+        ],
     ],
     'zf-versioning' => [
         'uri' => [
@@ -148,6 +182,7 @@ return [
             'Api\\V1\\Rest\\Department\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\DepartmentMarker\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\Place\\Controller' => 'HalJson',
+            'Api\\V1\\Rest\\PlaceMarker\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\PlaceType\\Controller' => 'HalJson',
         ],
         'accept_whitelist' => [
@@ -162,6 +197,11 @@ return [
                 2 => 'application/json',
             ],
             'Api\\V1\\Rest\\Place\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/hal+json',
+                2 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\PlaceMarker\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/hal+json',
                 2 => 'application/json',
@@ -182,6 +222,10 @@ return [
                 1 => 'application/json',
             ],
             'Api\\V1\\Rest\\Place\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rest\\PlaceMarker\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
                 1 => 'application/json',
             ],
@@ -221,6 +265,12 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.place',
                 'route_identifier_name' => 'place_id',
+                'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
+            ],
+            'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerEntity' => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.place-marker',
+                'route_identifier_name' => 'place_marker_id',
                 'hydrator' => 'Zend\\Stdlib\\Hydrator\\ArraySerializable',
             ],
             'Api\\V1\\Rest\\PlaceType\\PlaceTypeEntity' => [

@@ -6,44 +6,96 @@
     app.controller('IndexController', [
         '$scope',
         '$http',
+        'url',
         'navigatorGeolocation',
-        function($scope, $http, navigatorGeolocation) {
+        'marker',
+        'placeMarkerMapper',
+        function($scope, $http, url, navigatorGeolocation, marker, placeMarkerMapper) {
             var map;
 
-            $scope.markersData = {};
+            var markers = [];
+
+            $scope.markersData = [];
+            $scope.links = {};
+            $scope.page = 1;
+            $scope.pageCount = null;
+            $scope.pageSize = null;
+            $scope.placesCount = null;
 
             function initMap(lat, lng) {
                 map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 9,
+                    zoom: 14,
                     center: new google.maps.LatLng(lat, lng)
                 });
 
-                requestDepartmentMarkers(onRequestDepartmentMarkersSuccess);
+                google.maps.event.addListenerOnce(map, 'idle', putMarkers);
+                google.maps.event.addListener(map, 'dragend', putMarkers);
+                google.maps.event.addListener(map, 'zoom_changed', putMarkers);
             }
 
-            function requestDepartmentMarkers(success) {
-                $http
-                    .get('/api/department-marker')
-                    .success(success)
-                    .error(console.error)
+            function putMarkers() {
+                $scope.page = 1;
+
+                requestPlaceMarkers()
             }
 
-            function onRequestDepartmentMarkersSuccess(res) {
-                $scope.markersData = res._embedded.department_marker;
+            function requestPlaceMarkers(link) {
+                var promise = link ? $http.get(link) : getPlaceMarkersPromise();
+                promise
+                    .success(onPlaceMarkerRequestSuccess)
+                    .error(console.error);
+            }
 
-                $scope.markersData.forEach(function(markerData) {
-                    var marker = new google.maps.Marker({
-                        title: markerData.title,
-                        position: new google.maps.LatLng(markerData.latitude, markerData.longitude),
-                        map: map
-                    });
+            function getPlaceMarkersPromise() {
+                var bounds = map.getBounds(),
+                    ne = bounds.getNorthEast(),
+                    sw = bounds.getSouthWest();
+
+                return placeMarkerMapper.fetchMany({
+                    'south-west-bound': sw.lat() + ',' + sw.lng(),
+                    'north-east-bound': ne.lat() + ',' + ne.lng()
                 });
             }
+
+            function onPlaceMarkerRequestSuccess(res) {
+                $scope.pageCount = res.page_count;
+                $scope.pageSize = res.page_size;
+                $scope.placesCount = res.total_items;
+                $scope.links = res._links;
+                $scope.markersData = res._embedded.place_marker;
+
+                marker.deleteMany(markers);
+                markers = marker.createMany($scope.markersData);
+                marker.attachMany(markers, map);
+            }
+
+            $scope.pageChange = function(link) {
+                var queryParams = url.queryParams(link);
+                $scope.page = queryParams.page ? queryParams.page : 1;
+
+                requestPlaceMarkers(link);
+            };
+
+            $scope.rowIndex = function($index) {
+                return ($index + 1) + (($scope.page - 1) * $scope.pageSize);
+            };
+
+            $scope.onPlaceRowEnter = function($index) {
+                var m = marker.find($index, markers);
+                m.setIcon('/img/marker-hoover.png');
+            };
+
+            $scope.onPlaceRowLeave = function($index) {
+                var m = marker.find($index, markers);
+                m.setIcon('/img/marker.png');
+            };
+
+            //initMap(43.1143760, 5.9416940);
 
             navigatorGeolocation.run(function(lat, lng) {
                 initMap(lat, lng);
             }, function() {
-                initMap(43.142859, 5.937183);
+                initMap(43.1143760, 5.9416940);
             });
 
         }

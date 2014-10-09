@@ -29,17 +29,20 @@
         }
     ]);
 
-    app.service('navigatorGeolocation', [
+    app.service('url', [
         function() {
-            this.run = function(success, error) {
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(function(position) {
-                        success(position.coords.latitude, position.coords.longitude);
-                    }, error);
-                } else {
-                    error();
+            this.queryParams = function(url) {
+                if (!url) {
+                    return {};
                 }
-            }
+                var vars = {}, pair;
+                var pairs = url.slice(url.indexOf('?') + 1).split('&');
+                for (var i = 0; i < pairs.length; i++) {
+                    pair = pairs[i].split('=');
+                    vars[pair[0]] = decodeURIComponent(pair[1]);
+                }
+                return vars;
+            };
         }
     ]);
 
