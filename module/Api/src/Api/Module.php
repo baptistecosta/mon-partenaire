@@ -65,6 +65,7 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface, Bo
 
                 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResource' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResourceFactory',
                 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapper' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapperFactory',
+                'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilter' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilterFactory',
 
                 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResource' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResourceFactory',
                 'Api\\V1\\Rest\\PlaceType\\PlaceTypeMapper' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeMapperFactory',

@@ -14,13 +14,10 @@ class PlaceMarkerMapper extends AbstractMapper
 {
     public function fetchAll(array $params = [])
     {
-        $northEastBound = explode(',', $params['north-east-bound']);
-        $southWestBound = explode(',', $params['south-west-bound']);
-
-        $latSouth = floatval($southWestBound[0]);
-        $latNorth = floatval($northEastBound[0]);
-        $lngWest = floatval($southWestBound[1]);
-        $lngEast = floatval($northEastBound[1]);
+        $latSouth = floatval($params['south-west-bound']['latitude']);
+        $latNorth = floatval($params['north-east-bound']['latitude']);
+        $lngWest = floatval($params['south-west-bound']['longitude']);
+        $lngEast = floatval($params['north-east-bound']['longitude']);
 
         $sql = new Sql($this->getAdapter());
         $select = $sql->select($this->getTableName());

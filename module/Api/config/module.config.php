@@ -235,6 +235,31 @@ return [
             ],
         ],
     ],
+    'zf-content-validation' => [
+        'Api\\V1\\Rest\\PlaceMarker\\Controller' => [
+            'input_filter' => 'Api\\V1\\Rest\\PlaceMarker\\Validator'
+        ]
+    ],
+    'input_filter_specs' => [
+        'Api\\V1\\Rest\\PlaceMarker\\Validator' => [
+            0 => [
+                'name' => 'north-east-bound',
+                'required' => true,
+                'filters' => [],
+                'validators' => [],
+                'allow_empty' => false,
+                'continue_if_empty' => false,
+            ],
+            1 => [
+                'name' => 'south-west-bound',
+                'required' => true,
+                'filters' => [],
+                'validators' => [],
+                'allow_empty' => false,
+                'continue_if_empty' => false,
+            ],
+        ]
+    ],
     'zf-hal' => [
         'metadata_map' => [
             'Api\\V1\\Rest\\Department\\DepartmentEntity' => [
