@@ -26,7 +26,7 @@ class PlaceMarkerMapper extends AbstractMapper
             'latitude',
             'longitude',
             'title' => 'name',
-            'icon' => new Expression("'/img/marker.png'")
+            'icon' => new Expression("'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'")
         ]);
         $select->where("CONTAINS(
             GeomFromText('POLYGON((

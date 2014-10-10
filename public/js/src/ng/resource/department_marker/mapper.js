@@ -3,7 +3,7 @@
 
     var app = angular.module('myTennisPal');
 
-    app.factory('placeMarkerMapper', [
+    app.factory('departmentMarkerMapper', [
         '$http',
         function($http) {
             return {

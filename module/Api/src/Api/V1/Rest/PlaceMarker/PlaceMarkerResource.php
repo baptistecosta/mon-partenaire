@@ -3,7 +3,6 @@ namespace Api\V1\Rest\PlaceMarker;
 
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use Zend\Stdlib\Parameters;
 use ZF\Rest\AbstractResourceListener;
 
 /**
@@ -30,7 +29,7 @@ class PlaceMarkerResource extends AbstractResourceListener implements ServiceLoc
     /**
      * Fetch all or a subset of resources
      *
-     * @param array|Parameters $params
+     * @param array $params
      * @return mixed
      */
     public function fetchAll($params = [])

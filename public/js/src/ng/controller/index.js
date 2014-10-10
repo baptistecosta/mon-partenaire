@@ -9,11 +9,12 @@
         'url',
         'navigatorGeolocation',
         'marker',
+        'departmentMarkerMapper',
         'placeMarkerMapper',
-        function($scope, $http, url, navigatorGeolocation, marker, placeMarkerMapper) {
+        function($scope, $http, url, navigatorGeolocation, marker, departmentMarkerMapper, placeMarkerMapper) {
             var map;
 
-            var markers = [];
+            var placeMarkers = [];
 
             $scope.markersData = [];
             $scope.links = {};
@@ -28,15 +29,32 @@
                     center: new google.maps.LatLng(lat, lng)
                 });
 
-                google.maps.event.addListenerOnce(map, 'idle', putMarkers);
+                google.maps.event.addListenerOnce(map, 'idle', function() {
+                    putDepartmentMarkers();
+                    putMarkers();
+                });
                 google.maps.event.addListener(map, 'dragend', putMarkers);
                 google.maps.event.addListener(map, 'zoom_changed', putMarkers);
+            }
+
+            function putDepartmentMarkers() {
+                departmentMarkerMapper
+                    .fetchMany()
+                    .success(function(res) {
+                        var markersData = res._embedded.department_marker;
+                        marker.attachMany(marker.createMany(markersData), map);
+                    })
+                    .error(console.error);
             }
 
             function putMarkers() {
                 $scope.page = 1;
 
-                requestPlaceMarkers()
+                if (map.getZoom() >= 10) {
+                    requestPlaceMarkers()
+                } else {
+                    deletePlaceMarkers();
+                }
             }
 
             function requestPlaceMarkers(link) {
@@ -64,9 +82,13 @@
                 $scope.links = res._links;
                 $scope.markersData = res._embedded.place_marker;
 
-                marker.deleteMany(markers);
-                markers = marker.createMany($scope.markersData);
-                marker.attachMany(markers, map);
+                marker.deleteMany(placeMarkers);
+                placeMarkers = marker.createMany($scope.markersData);
+                marker.attachMany(placeMarkers, map);
+            }
+
+            function deletePlaceMarkers() {
+                marker.deleteMany(placeMarkers);
             }
 
             $scope.pageChange = function(link) {
@@ -81,13 +103,17 @@
             };
 
             $scope.onPlaceRowEnter = function($index) {
-                var m = marker.find($index, markers);
-                m.setIcon('/img/marker-hoover.png');
+                var m = marker.find($index, placeMarkers);
+                if (m) {
+                    m.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                }
             };
 
             $scope.onPlaceRowLeave = function($index) {
-                var m = marker.find($index, markers);
-                m.setIcon('/img/marker.png');
+                var m = marker.find($index, placeMarkers);
+                if (m) {
+                    m.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+                }
             };
 
             //initMap(43.1143760, 5.9416940);
