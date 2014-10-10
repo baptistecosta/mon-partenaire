@@ -7,7 +7,7 @@
         function() {
             var service = {};
 
-            service.create = function(data, id) {
+            service.create = function(data, id, addListeners) {
                 var marker = new google.maps.Marker({
                     title: data.title,
                     position: new google.maps.LatLng(data.latitude, data.longitude),
@@ -16,13 +16,17 @@
                 if (id) {
                     marker.set('id', id);
                 }
+                if (addListeners) {
+                    addListeners(marker, data);
+                }
                 return marker;
             };
 
-            service.createMany = function(markersData) {
+            service.createMany = function(markersData, addListeners) {
                 var markers = [];
                 markersData.forEach(function(markerData, index) {
-                    markers.push(service.create(markerData, String(index)));
+                    var marker = service.create(markerData, String(index), addListeners);
+                    markers.push(marker);
                 });
                 return markers;
             };

@@ -8,8 +8,6 @@ class IndexController extends AbstractActionController
 {
     public function indexAction()
     {
-//        $this->getServiceLocator()->get('tennis-place-finder')->run();
-
         return new ViewModel();
     }
 }

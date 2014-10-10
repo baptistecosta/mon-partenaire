@@ -12,8 +12,9 @@ class DepartmentMapperFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $adapter = $serviceLocator->get('db.adapter.localities');
         $albumMapper = new DepartmentMapper();
-        return $albumMapper->setAdapter($adapter);
+        return $albumMapper
+            ->setAdapter($serviceLocator->get('db.adapter.localities'))
+            ->setTableName('departments');
     }
 }

@@ -16,7 +16,7 @@ class PlaceMapperFactory implements FactoryInterface
         $dbAdapter = $services->get('db.adapter.my-tennis-pal');
 
         /** @var PlaceTypeMapper $placeTypeMapper */
-        $placeTypeMapper = $services->get('Api\\V1\\Rest\\PlaceType\\PlaceTypeMapper');
+        $placeTypeMapper = $services->get('Api\\V1\\Rest\\PlaceType\\Mapper');
 
         $mapper = new PlaceMapper();
         return $mapper->setAdapter($dbAdapter)

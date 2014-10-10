@@ -9,7 +9,7 @@ class DepartmentMarkerResourceFactory
 {
     public function __invoke($services)
     {
-        $mapper = $services->get('Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerMapper');
+        $mapper = $services->get('Api\\V1\\Rest\\DepartmentMarker\\Mapper');
         return new DepartmentMarkerResource($mapper);
     }
 }

@@ -34,7 +34,7 @@ class PlaceMarkerResource extends AbstractResourceListener implements ServiceLoc
      */
     public function fetchAll($params = [])
     {
-        $inputFilter = $this->getServiceLocator()->get('Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilter');
+        $inputFilter = $this->getServiceLocator()->get('Api\\V1\\Rest\\PlaceMarker\\InputFilter');
         $inputFilter->setData((array)$params);
         if ($inputFilter->isValid()) {
             return $this->mapper->fetchAll($inputFilter->getValues());

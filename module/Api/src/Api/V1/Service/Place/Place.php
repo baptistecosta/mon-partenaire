@@ -1,5 +1,7 @@
 <?php
-namespace Application\Service;
+namespace Api\V1\Service\Place;
+
+use Api\V1\Rest\Department\DepartmentMapper;
 use Api\V1\Rest\Place\PlaceMapper;
 use SebastianBergmann\Exporter\Exception;
 use Zend\Http\Client;
@@ -10,11 +12,14 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\Stdlib\Parameters;
 
 /**
- * Class TennisPlaceFinder
+ * Class Place
+ * @package Api\V1\Service\Place
  */
-class TennisPlaceFinder implements ServiceLocatorAwareInterface
+class Place implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
+
+    protected $departmentId;
 
     protected $location;
 
@@ -37,13 +42,26 @@ class TennisPlaceFinder implements ServiceLocatorAwareInterface
     public function run($location)
     {
         if (empty($location)) {
-            throw new Exception('Invalid location');
+            return false;
         }
         $this->location = $location;
 
+        $this->getDepartmentId();
         $this->requestPlaceTypes();
         $this->requestTennisPlaces();
         $this->saveTennisPlaces();
+        $this->saveScrappedDepartment($location);
+
+        return true;
+    }
+
+    private function getDepartmentId()
+    {
+        /** @var DepartmentMapper $departmentMapper */
+        $departmentMapper = $this->getServiceLocator()->get('Api\\V1\\Rest\\Department\\Mapper');
+        if (!$this->departmentId = $departmentMapper->fetchUnscrappedDepartmentIdFromLocation($this->location)) {
+            throw new Exception('No department found for this location');
+        }
     }
 
     private function requestPlaceTypes()
@@ -74,7 +92,7 @@ class TennisPlaceFinder implements ServiceLocatorAwareInterface
 
         static $shield = 0;
         if (!empty($data['next_page_token']) && $shield++ <= 10) {
-            sleep(5);
+            sleep(2);
             $this->requestTennisPlaces($data['next_page_token']);
         }
     }
@@ -82,11 +100,17 @@ class TennisPlaceFinder implements ServiceLocatorAwareInterface
     private function saveTennisPlaces()
     {
         /** @var PlaceMapper $placeMapper */
-        $placeMapper = $this->getServiceLocator()->get('Api\\V1\\Rest\\Place\\PlaceMapper');
+        $placeMapper = $this->getServiceLocator()->get('Api\\V1\\Rest\\Place\\Mapper');
 
         foreach ($this->tennisPlaces as $tennisPlace) {
             $placeMapper->create($tennisPlace);
         }
+    }
+
+    private function saveScrappedDepartment()
+    {
+        $scrappedDepartmentMapper = $this->getServiceLocator()->get('Api\\V1\\Rest\\ScrappedDepartment\\Mapper');
+        $scrappedDepartmentMapper->create($this->departmentId);
     }
 
     private function onTennisPlacesFound($places)
@@ -149,7 +173,7 @@ class TennisPlaceFinder implements ServiceLocatorAwareInterface
             'name' => 'tennis',
             'keyword' => 'tennis',
             'language' => 'fr',
-            'location' => $this->location
+            'location' => $this->location['latitude'] . ',' . $this->location['longitude']
         ]));
         return $req;
     }

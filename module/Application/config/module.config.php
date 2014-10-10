@@ -61,7 +61,7 @@ return array(
             'translator' => 'MvcTranslator',
         ),
         'invokables' => [
-            'tennis-place-finder' => 'Application\\Service\\TennisPlaceFinder'
+
         ]
     ),
     'translator' => array(

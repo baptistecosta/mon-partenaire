@@ -9,7 +9,7 @@ class PlaceMarkerResourceFactory
 {
     public function __invoke($services)
     {
-        $mapper = $services->get('Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapper');
+        $mapper = $services->get('Api\\V1\\Rest\\PlaceMarker\\Mapper');
 
         return new PlaceMarkerResource($mapper);
     }

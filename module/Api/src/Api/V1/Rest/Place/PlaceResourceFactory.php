@@ -12,7 +12,7 @@ class PlaceResourceFactory implements FactoryInterface
 {
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        $mapper = $serviceLocator->get('Api\\V1\\Rest\\Place\\PlaceMapper');
+        $mapper = $serviceLocator->get('Api\\V1\\Rest\\Place\\Mapper');
         return new PlaceResource($mapper);
     }
 }

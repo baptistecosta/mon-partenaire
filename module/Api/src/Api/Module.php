@@ -3,10 +3,12 @@ namespace Api;
 
 use Zend\EventManager\EventInterface;
 use Zend\ModuleManager\Feature\BootstrapListenerInterface;
+use Zend\ModuleManager\Feature\ControllerPluginProviderInterface;
+use Zend\ModuleManager\Feature\ControllerProviderInterface;
 use Zend\ModuleManager\Feature\ServiceProviderInterface;
 use ZF\Apigility\Provider\ApigilityProviderInterface;
 
-class Module implements ApigilityProviderInterface, ServiceProviderInterface, BootstrapListenerInterface
+class Module implements ApigilityProviderInterface, ServiceProviderInterface, BootstrapListenerInterface, ControllerProviderInterface
 {
     /**
      * Listen to the bootstrap event
@@ -53,22 +55,42 @@ class Module implements ApigilityProviderInterface, ServiceProviderInterface, Bo
     public function getServiceConfig()
     {
         return [
+            'invokables' => [
+                'place' => 'Api\\V1\\Service\\Place\\Place'
+            ],
             'factories' => [
-                'Api\\V1\\Rest\\Department\\DepartmentResource' => 'Api\\V1\\Rest\\Department\\DepartmentResourceFactory',
-                'Api\\V1\\Rest\\Department\\DepartmentMapper' => 'Api\\V1\\Rest\\Department\\DepartmentMapperFactory',
+                'Api\\V1\\Rest\\Department\\Resource' => 'Api\\V1\\Rest\\Department\\DepartmentResourceFactory',
+                'Api\\V1\\Rest\\Department\\Mapper' => 'Api\\V1\\Rest\\Department\\DepartmentMapperFactory',
 
-                'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerResource' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerResourceFactory',
-                'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerMapper' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerMapperFactory',
+                'Api\\V1\\Rest\\DepartmentMarker\\Resource' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerResourceFactory',
+                'Api\\V1\\Rest\\DepartmentMarker\\Mapper' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerMapperFactory',
 
-                'Api\\V1\\Rest\\Place\\PlaceResource' => 'Api\\V1\\Rest\\Place\\PlaceResourceFactory',
-                'Api\\V1\\Rest\\Place\\PlaceMapper' => 'Api\\V1\\Rest\\Place\\PlaceMapperFactory',
+                'Api\\V1\\Rest\\Place\\Resource' => 'Api\\V1\\Rest\\Place\\PlaceResourceFactory',
+                'Api\\V1\\Rest\\Place\\Mapper' => 'Api\\V1\\Rest\\Place\\PlaceMapperFactory',
 
-                'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResource' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResourceFactory',
-                'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapper' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapperFactory',
-                'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilter' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilterFactory',
+                'Api\\V1\\Rest\\PlaceMarker\\Resource' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResourceFactory',
+                'Api\\V1\\Rest\\PlaceMarker\\Mapper' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerMapperFactory',
+                'Api\\V1\\Rest\\PlaceMarker\\InputFilter' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerInputFilterFactory',
 
-                'Api\\V1\\Rest\\PlaceType\\PlaceTypeResource' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResourceFactory',
-                'Api\\V1\\Rest\\PlaceType\\PlaceTypeMapper' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeMapperFactory',
+                'Api\\V1\\Rest\\PlaceType\\Resource' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResourceFactory',
+                'Api\\V1\\Rest\\PlaceType\\Mapper' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeMapperFactory',
+
+                'Api\\V1\\Rest\\ScrappedDepartment\\Mapper' => 'Api\\V1\\Rest\\ScrappedDepartment\\ScrappedDepartmentMapperFactory',
+            ],
+        ];
+    }
+
+    /**
+     * Expected to return \Zend\ServiceManager\Config object or array to seed
+     * such an object.
+     *
+     * @return array|\Zend\ServiceManager\Config
+     */
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                'Api\\V1\\Rpc\\Place\\Controller' => 'Api\\V1\\Rpc\\Place\\PlaceControllerFactory',
             ],
         ];
     }

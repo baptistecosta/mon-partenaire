@@ -2,6 +2,8 @@
 namespace Api\V1\Rest;
 
 use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Sql;
 
 /**
  * Class AbstractMapper
@@ -55,4 +57,38 @@ class AbstractMapper
         return $this->tableName;
     }
 
+    public function find($params)
+    {
+        $sql = new Sql($this->getAdapter());
+
+        $select = new Select();
+        $select->from($params['from']);
+        if (!empty($params['columns'])) {
+            $select->columns($params['columns']);
+        }
+        foreach ($params['where'] as $where) {
+            $select->where($where);
+        }
+        foreach ($params['joins'] as $join) {
+            if (empty($join['columns'])) {
+                $join['columns'] = Select::SQL_STAR;
+            }
+            if (empty($join['type'])) {
+                $join['type'] = Select::JOIN_INNER;
+            }
+            $select->join($join['name'], $join['on'], $join['columns'], $join['type']);
+        }
+
+        $query = $sql->getSqlStringForSqlObject($select);
+
+        $results = $this->adapter->query($query, Adapter::QUERY_MODE_EXECUTE);
+        $data = $results->toArray();
+        if (empty($data)) {
+            return false;
+        } else if (count($data) == 1) {
+            return $data[0];
+        } else {
+            return $data;
+        }
+    }
 }

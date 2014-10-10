@@ -47,11 +47,25 @@ return [
                     ],
                 ],
             ],
+            'api.rpc.place' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/place[/:action]',
+                    'constraints' => [
+                        'action' => '[a-zA-Z][a-zA-Z0-9_-]*',
+                        'id' => '[0-9]*',
+                    ],
+                    'defaults' => [
+                        'controller' => 'Api\\V1\\Rpc\\Place\\Controller',
+                        'action' => 'find',
+                    ],
+                ],
+            ],
         ],
     ],
     'zf-rest' => [
         'Api\\V1\\Rest\\Department\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\Department\\DepartmentResource',
+            'listener' => 'Api\\V1\\Rest\\Department\\Resource',
             'route_name' => 'api.rest.department',
             'route_identifier_name' => 'department_id',
             'collection_name' => 'department',
@@ -71,7 +85,7 @@ return [
             'service_name' => 'Department',
         ],
         'Api\\V1\\Rest\\DepartmentMarker\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\DepartmentMarker\\DepartmentMarkerResource',
+            'listener' => 'Api\\V1\\Rest\\DepartmentMarker\\Resource',
             'route_name' => 'api.rest.department-marker',
             'route_identifier_name' => 'department_id',
             'collection_name' => 'department_marker',
@@ -91,7 +105,7 @@ return [
             'service_name' => 'DepartmentMarker',
         ],
         'Api\\V1\\Rest\\Place\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\Place\\PlaceResource',
+            'listener' => 'Api\\V1\\Rest\\Place\\Resource',
             'route_name' => 'api.rest.place',
             'route_identifier_name' => 'place_id',
             'collection_name' => 'place',
@@ -115,7 +129,7 @@ return [
             'service_name' => 'Place',
         ],
         'Api\\V1\\Rest\\PlaceType\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\PlaceType\\PlaceTypeResource',
+            'listener' => 'Api\\V1\\Rest\\PlaceType\\Resource',
             'route_name' => 'api.rest.place-type',
             'route_identifier_name' => 'place_type_id',
             'collection_name' => 'place_type',
@@ -139,7 +153,7 @@ return [
             'service_name' => 'PlaceType',
         ],
         'Api\\V1\\Rest\\PlaceMarker\\Controller' => [
-            'listener' => 'Api\\V1\\Rest\\PlaceMarker\\PlaceMarkerResource',
+            'listener' => 'Api\\V1\\Rest\\PlaceMarker\\Resource',
             'route_name' => 'api.rest.place-marker',
             'route_identifier_name' => 'place_marker_id',
             'collection_name' => 'place_marker',
@@ -164,17 +178,24 @@ return [
             'service_name' => 'PlaceMarker',
         ],
     ],
-    'zf-versioning' => [
-        'uri' => [
-            0 => 'api.rest.department'
+    'zf-rpc' => [
+        'Api\\V1\\Rpc\\Place\\Controller' => [
+            'service_name' => 'Place',
+            'http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'route_name' => 'api.rpc.place',
         ],
     ],
-    'service_manager' => [
-        'invokables' => [
-            //
-        ],
-        'initializers' => [
-            //
+    'zf-versioning' => [
+        'uri' => [
+            0 => 'api.rest.department',
+            1 => 'api.rest.department-marker',
+            2 => 'api.rest.place',
+            3 => 'api.rest.place-type',
+            4 => 'api.rest.place-marker',
+            5 => 'api.rpc.place',
         ],
     ],
     'zf-content-negotiation' => [
@@ -184,6 +205,7 @@ return [
             'Api\\V1\\Rest\\Place\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\PlaceMarker\\Controller' => 'HalJson',
             'Api\\V1\\Rest\\PlaceType\\Controller' => 'HalJson',
+            'Api\\V1\\Rpc\\Place\\Controller' => 'Json',
         ],
         'accept_whitelist' => [
             'Api\\V1\\Rest\\Department\\Controller' => [
@@ -211,6 +233,11 @@ return [
                 1 => 'application/hal+json',
                 2 => 'application/json',
             ],
+            'Api\\V1\\Rpc\\Place\\Controller' => [
+                0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+                2 => 'application/*+json',
+            ],
         ],
         'content_type_whitelist' => [
             'Api\\V1\\Rest\\Department\\Controller' => [
@@ -231,6 +258,10 @@ return [
             ],
             'Api\\V1\\Rest\\PlaceType\\Controller' => [
                 0 => 'application/vnd.api.v1+json',
+                1 => 'application/json',
+            ],
+            'Api\\V1\\Rpc\\Place\\Controller' => [
+                0 => 'application/vnd.music.v1+json',
                 1 => 'application/json',
             ],
         ],

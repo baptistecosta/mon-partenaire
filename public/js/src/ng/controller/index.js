@@ -11,10 +11,11 @@
         'marker',
         'departmentMarkerMapper',
         'placeMarkerMapper',
-        function($scope, $http, url, navigatorGeolocation, marker, departmentMarkerMapper, placeMarkerMapper) {
+        function($scope, $http, url, navigatorGeolocation, markerService, departmentMarkerMapper, placeMarkerMapper) {
             var map;
 
             var placeMarkers = [];
+            var departmentMarkers = [];
 
             $scope.markersData = [];
             $scope.links = {};
@@ -25,26 +26,44 @@
 
             function initMap(lat, lng) {
                 map = new google.maps.Map(document.getElementById('map'), {
-                    zoom: 14,
+                    zoom: 7,
                     center: new google.maps.LatLng(lat, lng)
                 });
 
+                google.maps.event.addListener(map, 'dragend', putMarkers);
+                google.maps.event.addListener(map, 'zoom_changed', putMarkers);
                 google.maps.event.addListenerOnce(map, 'idle', function() {
                     putDepartmentMarkers();
                     putMarkers();
                 });
-                google.maps.event.addListener(map, 'dragend', putMarkers);
-                google.maps.event.addListener(map, 'zoom_changed', putMarkers);
             }
 
             function putDepartmentMarkers() {
                 departmentMarkerMapper
                     .fetchMany()
                     .success(function(res) {
+                        markerService.deleteMany(departmentMarkers);
+
                         var markersData = res._embedded.department_marker;
-                        marker.attachMany(marker.createMany(markersData), map);
+                        departmentMarkers = markerService.createMany(markersData, addDepartmentMarkerListeners);
+                        markerService.attachMany(departmentMarkers, map);
                     })
                     .error(console.error);
+            }
+
+            function addDepartmentMarkerListeners(marker, markerData) {
+                google.maps.event.addListener(marker, 'click', function(e) {
+                    if (!markerData.isScrapped) {
+                        $http
+                            .post('http://mon-partenaire.loc/api/place/find', {
+                                geolocation: markerData.latitude + ',' + markerData.longitude
+                            })
+                            .success(function(res) {
+                                putDepartmentMarkers();
+                            })
+                            .error(console.error);
+                    }
+                });
             }
 
             function putMarkers() {
@@ -82,13 +101,13 @@
                 $scope.links = res._links;
                 $scope.markersData = res._embedded.place_marker;
 
-                marker.deleteMany(placeMarkers);
-                placeMarkers = marker.createMany($scope.markersData);
-                marker.attachMany(placeMarkers, map);
+                markerService.deleteMany(placeMarkers);
+                placeMarkers = markerService.createMany($scope.markersData);
+                markerService.attachMany(placeMarkers, map);
             }
 
             function deletePlaceMarkers() {
-                marker.deleteMany(placeMarkers);
+                markerService.deleteMany(placeMarkers);
             }
 
             $scope.pageChange = function(link) {
@@ -103,14 +122,14 @@
             };
 
             $scope.onPlaceRowEnter = function($index) {
-                var m = marker.find($index, placeMarkers);
+                var m = markerService.find($index, placeMarkers);
                 if (m) {
                     m.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
                 }
             };
 
             $scope.onPlaceRowLeave = function($index) {
-                var m = marker.find($index, placeMarkers);
+                var m = markerService.find($index, placeMarkers);
                 if (m) {
                     m.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
                 }

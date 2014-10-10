@@ -19,6 +19,8 @@ class DepartmentMarkerEntity implements ArraySerializableInterface
 
     protected $title;
 
+    protected $isScrapped;
+
     public function exchangeArray(array $array)
     {
         $this->setId($array['id']);
@@ -26,6 +28,7 @@ class DepartmentMarkerEntity implements ArraySerializableInterface
         $this->setLongitude($array['longitude']);
         $this->setIcon(empty($array['icon']) ? '' : $array['icon']);
         $this->setTitle($array['id'] . ' - ' . $array['name']);
+        $this->setIsScrapped(!empty($array['scrapped_department_id']));
     }
 
     public function getArrayCopy()
@@ -36,6 +39,7 @@ class DepartmentMarkerEntity implements ArraySerializableInterface
             'longitude' => $this->getLongitude(),
             'icon' => $this->getIcon(),
             'title' => $this->getTitle(),
+            'isScrapped' => $this->getIsScrapped(),
         ];
     }
 
@@ -117,5 +121,21 @@ class DepartmentMarkerEntity implements ArraySerializableInterface
     public function setLongitude($lng)
     {
         $this->longitude = $lng;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getIsScrapped()
+    {
+        return $this->isScrapped;
+    }
+
+    /**
+     * @param mixed $isScrapped
+     */
+    public function setIsScrapped($isScrapped)
+    {
+        $this->isScrapped = $isScrapped;
     }
 }
